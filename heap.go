@@ -7,19 +7,23 @@ import (
 )
 
 func min_heapify(s []int, idx int) {
-	if idx < 0 {
+	length := len(s)
+	if idx < 0 || (length / 2) <= idx {
 		return
 	}
+	fmt.Print("----\n")
+	display_pyramid(s)
 	idx_left_chi  := 2 * idx + 1
 	idx_right_chi := 2 * idx + 2
-	length := len(s)
 	if length <= idx_right_chi || s[idx_left_chi] <= s[idx_right_chi] {
 		if  s[idx_left_chi] < s[idx] {
 			s[idx], s[idx_left_chi] = s[idx_left_chi], s[idx]
+			min_heapify(s, idx_left_chi)
 		}
 	} else {
 		if  s[idx_right_chi] < s[idx] {
 			s[idx], s[idx_right_chi] = s[idx_right_chi], s[idx]
+			min_heapify(s, idx_right_chi)
 		}
 	}
 }
@@ -82,7 +86,6 @@ func display_pyramid(s []int) {
 func build_heap(s []int) {
 	len := len(s)
 	for cnt := len / 2; 0 <= cnt; cnt-- {
-		fmt.Print("---- ", "sub cnt: ", cnt, "\n")
 		min_heapify(s, cnt - 1)
 		display_pyramid(s)
 	}
@@ -105,20 +108,22 @@ func main() {
 	fmt.Printf("length: %d\n", length)
 	display_pyramid(s)
 
+	build_heap(s)
+
 	cnt := 0
 	a := make([]int, 0)
 	for length > 0 {
 		cnt++
 		fmt.Print("\n==== ", cnt, " ====\n")
-		build_heap(s)
 		last := length - 1
 		s[0], s[last] = s[last], s[0]
 		a = append(a, s[last])
 		s = s[:last]
 		length = len(s)
+		min_heapify(s, 0)
 	}
 	fmt.Print(a, "\n")
-	display_pyramid(a)
+	//display_pyramid(a)
 	os.Exit(0)
 
 }
